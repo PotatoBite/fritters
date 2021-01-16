@@ -1,0 +1,2 @@
+# fritters
+basic encryption utilities
