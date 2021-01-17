@@ -12,7 +12,11 @@ set(FRITTERS_SOURCES
     src/ciphers.cpp
 )
 
-add_library(fritters STATIC
+add_library(fritters_static STATIC
+    ${FRITTERS_SOURCES}
+)
+
+add_library(fritters SHARED
     ${FRITTERS_SOURCES}
 )
 
@@ -26,11 +30,15 @@ set (RequiredExtras
 #preparing install step
 set_target_properties(fritters PROPERTIES RESOURCE "${RequiredExtras}")
 
+install(TARGETS fritters_static #_civ # source directory
+        DESTINATION "lib" # target directory
+)
+
 install(TARGETS fritters #_civ # source directory
         DESTINATION "lib" # target directory
 )
 
-install(DIRECTORY "./src" # source directory
+install(DIRECTORY "./src/" # source directory
         DESTINATION "include" # target directory
         FILES_MATCHING # install only matched files
         PATTERN "*.h" # select header files
