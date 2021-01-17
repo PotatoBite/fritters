@@ -6,6 +6,7 @@
 #include "fritters/vigenere.cpp"
 
 //utils
+//read a file(ifstream) to string
 std::string slurp(std::ifstream& in) {
     std::ostringstream sstr;
     sstr << in.rdbuf();
