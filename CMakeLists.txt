@@ -1,0 +1,42 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(potatobite.Fritters LANGUAGES CXX VERSION 0.0.1)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+enable_testing()
+
+set(FRITTERS_SOURCES
+    #src/cipher.h
+    src/ciphers.cpp
+)
+
+add_library(fritters STATIC
+    ${FRITTERS_SOURCES}
+)
+
+### Add some usable files to project build folder
+set (RequiredExtras
+    ""
+)
+
+#target_link_libraries( Fritters )
+
+#preparing install step
+set_target_properties(fritters PROPERTIES RESOURCE "${RequiredExtras}")
+
+install(TARGETS fritters #_civ # source directory
+        DESTINATION "lib" # target directory
+)
+
+install(DIRECTORY "./src" # source directory
+        DESTINATION "include" # target directory
+        FILES_MATCHING # install only matched files
+        PATTERN "*.h" # select header files
+		#PATTERN "*.c" # select header files
+		#PATTERN "*.cpp" # select header files
+)
+
+#add tests
+include("tests.cmake")
