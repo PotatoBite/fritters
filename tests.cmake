@@ -2,6 +2,7 @@
 ### Add some usable files to test
 set (TestRequiredExtras
     tests/test.db.sqlite
+    tests/test.db.MH.sqlite
     tests/test.txt
 )
 set (TESTS_FOLDER ${CMAKE_BINARY_DIR}/tests)

@@ -16,7 +16,8 @@ bool test_file_encrypt_decrypt(function<string(string)> cipher, function<string(
 int main(){
     
     int result = 0;
-    string test_file_name = "test.txt";
+    //string test_file_name = "test.txt";
+    string test_file_name = "test.db.MH.sqlite";
 
     //caesar
     if(!test_file_encrypt_decrypt(
@@ -46,6 +47,19 @@ int main(){
         result = -1;
     }
 
+    //xor
+    if(!test_file_encrypt_decrypt(
+        [](string unencrypted_str)->string{
+            return xor_encrypt(unencrypted_str, "mambo#5");
+        },
+        [](string encrypted_str)->string{
+            return xor_encrypt(encrypted_str, "mambo#5");
+        },
+        test_file_name
+    )){
+        cout<< "xor_encrypt failed" << endl;
+        result = -1;
+    }
     return result;
 }
 
@@ -81,7 +95,7 @@ bool test_file_encrypt_decrypt(function<string(string)> cipher, function<string(
     if(!test_file)
     {
         cout<<"\nError Occurred, Opening the Source File (to Read)!";
-        return -1;
+        return false;
     }
 
     //caesar
@@ -89,7 +103,7 @@ bool test_file_encrypt_decrypt(function<string(string)> cipher, function<string(
     if(!temp_file)
     {
         cout<<"\nError Occurred, Opening/Creating the tmp File!";
-        return 0;
+        return false;
     }
     temp_file << cipher(slurp(test_file));
     temp_file.close();
@@ -99,16 +113,16 @@ bool test_file_encrypt_decrypt(function<string(string)> cipher, function<string(
     if(!output_file)
     {
         cout<<"\nError Occurred, Opening/Creating the tmp File!";
-        return 0;
+        return false;
     }
     output_file << decipher(slurp(temp_file2));
     output_file.close();
 
-    if (!compareFiles(path_to_file,"output.txt")){
+    if (compareFiles(path_to_file,"output.txt") && !compareFiles(path_to_file,"tmp.txt")){
         test_file.close();
-        return false;
+        return true;
     }
 
     test_file.close();
-    return true;
+    return false;
 }

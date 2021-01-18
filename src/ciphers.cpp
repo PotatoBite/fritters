@@ -4,6 +4,7 @@
 
 #include "fritters/caesar.cpp"
 #include "fritters/vigenere.cpp"
+#include "fritters/xor.cpp"
 
 //utils
 //read a file(ifstream) to string
