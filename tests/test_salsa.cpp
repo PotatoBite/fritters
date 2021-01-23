@@ -8,6 +8,8 @@ bool test_double_round();
 bool test_littleendian_function();
 bool test_salsa20();
 bool test_salsa20_1000000();
+bool test_salsa20_expansion_stdarrays();
+bool test_salsa20_stdarrays();
 
 
 int main(){
@@ -32,6 +34,12 @@ int main(){
     
     //testing salsa20_1000000 function by set of input/output
     if(!test_salsa20()) result = -1;
+
+    //testing test_salsa20_expansion_stdarrays function by set of input/output
+    if(!test_salsa20_expansion_stdarrays()) result = -1;
+    
+    //testing salsa20_stdarrays function by set of input/output
+    if(!test_salsa20_stdarrays()) result = -1;
 
     return result;
 }
@@ -307,6 +315,69 @@ bool test_salsa20(){
     return false;
 }
 
+bool test_salsa20_stdarrays(){
+    int result = 0;
+    const int array_size = 3;
+    
+    std::array<std::array<LEUW4B,16>,array_size> input_words_array = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                211,159, 13,115, 76, 55, 82,183, 3,117,222, 37,191,187,234,136,
+                                                49,237,179, 48, 1,106,178,219,175,199,166, 48, 86, 16,179,207,
+                                                31,240, 32, 63, 15, 83, 93,161,116,147, 48,113,238, 55,204, 36,
+                                                79,201,235, 79, 3, 81,156, 47,203, 26,244,243, 88,118,104, 54,
+                                                88,118,104, 54, 79,201,235, 79, 3, 81,156, 47,203, 26,244,243,
+                                                191,187,234,136,211,159, 13,115, 76, 55, 82,183, 3,117,222, 37,
+                                                86, 16,179,207, 49,237,179, 48, 1,106,178,219,175,199,166, 48,
+                                                238, 55,204, 36, 31,240, 32, 63, 15, 83, 93,161,116,147, 48,113,
+
+    };
+
+    std::array<std::array<LEUW4B,16>,array_size> expected_output_words_array = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                            109, 42,178,168,156,240,248,238,168,196,190,203, 26,110,170,154,
+                                                            29, 29,150, 26,150, 30,235,249,190,163,251, 48, 69,144, 51, 57,
+                                                            118, 40,152,157,180, 57, 27, 94,107, 42,236, 35, 27,111,114,114,
+                                                            219,236,232,135,111,155,110, 18, 24,232, 95,158,179, 19, 48,202,
+                                                            179, 19, 48,202,219,236,232,135,111,155,110, 18, 24,232, 95,158,
+                                                            26,110,170,154,109, 42,178,168,156,240,248,238,168,196,190,203,
+                                                            69,144, 51, 57, 29, 29,150, 26,150, 30,235,249,190,163,251, 48,
+                                                            27,111,114,114,118, 40,152,157,180, 57, 27, 94,107, 42,236, 35
+    };
+
+    
+    for (int i=0; i<array_size; i++){
+        inplace_salsa20(input_words_array[i]);   
+    }
+
+    for (int i=0; i<array_size; i++){
+        for (int ii = 0; ii < 16 ; ii++){
+            if (input_words_array[i][ii].word != expected_output_words_array[i][ii].word){
+                result = -1;
+                std::cout << "\tsalsa20stdarrays function failed on input #: "<< i + 1 << std::endl <<"\t";
+                for (int iii=0; iii < 16; iii++){
+                    std::cout << std::hex << input_words_array[i][iii].word << " ";
+                }
+                std::cout<< std::endl << "\t";
+
+                for (int iii=0; iii < 16; iii++){
+                    std::cout << std::hex << expected_output_words_array[i][iii].word << " ";
+                }
+                std::cout<< std::endl;
+                break;   
+            }
+        }
+        
+    }
+
+    if (result == 0) return true; 
+    
+    return false;
+}
+
 bool test_salsa20_1000000(){
     int result = 0;
     const int array_size = 1;
@@ -354,3 +425,70 @@ bool test_salsa20_1000000(){
     
     return false;
 }
+
+bool test_salsa20_expansion_stdarrays(){
+    int result = 0;
+    
+    LEUW4B key[8];
+    LEUW4B nonce[4];
+
+    for (size_t i = 0; i < 16; i++){
+        key[i / 4].bytes_array[i % 4] = i + 1;
+    }
+    for (size_t i = 16; i < 32; i++){
+        key[i / 4].bytes_array[i % 4] = 185 + i;
+    }
+    for (size_t i = 0; i < 16; i++){
+        nonce[i / 4].bytes_array[i % 4] = i + 101;
+    }
+    LEUW4B expected_output_words_array[16] = { 69, 37, 68, 39, 41, 15,107,193,255,139,122, 6,170,233,217, 98,
+                                                            89,144,182,106, 21, 51,200, 65,239, 49,222, 34,215,114, 40,126,
+                                                            104,197, 7,225,197,153, 31, 2,102, 78, 76,176, 84,245,246,184,
+                                                            177,160,133,130, 6, 72,149,119,192,195,132,236,234,103,246, 74
+    };
+    LEUW4B expected_output_words_array2[16] = { 39,173, 46,248, 30,200, 82, 17, 48, 67,254,239, 37, 18, 13,247,
+                                                241,200, 61,144, 10, 55, 50,185, 6, 47,246,253,143, 86,187,225,
+                                                134, 85,110,246,161,163, 43,235,231, 94,171, 51,145,214,112, 29,
+                                                14,232, 5, 16,151,140,183,141,171, 9,122,181,104,182,177,193
+    };
+
+    auto output = salsa20_expansion(key, nonce, 256);
+    auto output2 = salsa20_expansion(key, nonce, 128);   
+
+    for (int ii = 0; ii < 16 ; ii++){
+        if (output[ii].word != expected_output_words_array[ii].word){
+            result = -1;
+            std::cout << "\tsalsa20_expansion function failed on input #: "<< 1 << std::endl <<"\t";
+            for (int iii=0; iii < 16; iii++){
+                std::cout << std::hex << output[iii].word << " ";
+            }
+            std::cout<< std::endl << "\t";
+            for (int iii=0; iii < 16; iii++){
+                std::cout << std::hex << expected_output_words_array[iii].word << " ";
+            }
+            std::cout<< std::endl;
+            break;   
+        }
+    }
+
+    for (int ii = 0; ii < 16 ; ii++){
+        if (output2[ii].word != expected_output_words_array2[ii].word){
+            result = -1;
+            std::cout << "\tsalsa20_expansion_stdarrays function failed on input #: "<< 2 << std::endl <<"\t";
+            for (int iii=0; iii < 16; iii++){
+                std::cout << std::hex << output2[iii].word << " ";
+            }
+            std::cout<< std::endl << "\t";
+            for (int iii=0; iii < 16; iii++){
+                std::cout << std::hex << expected_output_words_array2[iii].word << " ";
+            }
+            std::cout<< std::endl;
+            break;   
+        }
+    }
+
+    if (result == 0) return true; 
+    
+    return false;
+}
+

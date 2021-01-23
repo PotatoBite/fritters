@@ -1,5 +1,6 @@
 //All implementation treats words as uint8_t
-
+#include <iostream>
+#include<array>
 #include <stdint.h>
 #include <math.h>
 
@@ -14,8 +15,8 @@ union little_endiands_union_word_and_4bytes
 };
 
 /**
- * Union little_endiands_union_word_and_4bytes, representing
- * an array of 4 bytes(uint8_t), and a word(uint32_t)
+ * Union `little_endiands_union_word_and_4bytes`, representing
+ * an array of 4 bytes(uint8_t), or a word(uint32_t)
  **/
 typedef little_endiands_union_word_and_4bytes LEUW4B;
 
@@ -31,23 +32,6 @@ inline void quarter_round(uint32_t &y0, uint32_t &y1, uint32_t &y2, uint32_t &y3
 	y0 = y0 ^ ROTL(y3 + y2, 18);
 }
 
-
-
-//row-round of salsa20, not in use
-/**
- * @returns pointer to `uint32_t[16]`
-**/
-inline uint32_t* row_round(uint32_t input[16]){
-	
-	/**C++ does not advocate to return the address of a local variable to outside of the function so 
-	 * you would have to define the local variable as static variable.
-	 **/
-	static uint32_t output[16];
-
-
-
-	return output;
-}
 
 
 
@@ -106,7 +90,13 @@ inline uint32_t littleendian(uint8_t input[4]){
 
 
 
+
 //just for little endian systems for now, need to implement an inverse of the littleendian function above
+/**
+ * Salsa20 hash function.
+ * 
+ * this does all operations in place, in @param input. 
+**/
 void inplace_salsa20(LEUW4B input[16]){
 	uint32_t z[16];
 	
@@ -123,28 +113,85 @@ void inplace_salsa20(LEUW4B input[16]){
 	}
 
 }
-
-//not working
-void inplace_salsa20(uint8_t input[64]){
-	uint32_t x[16];
+void inplace_salsa20(std::array<LEUW4B,16>& input){
 	uint32_t z[16];
-
-	uint8_t temp_input[4];
+	
 	for(int i = 0 ; i < 16 ; i++){
-		temp_input[0] = input[i * 4 + 0];
-		temp_input[1] = input[i * 4 + 1];
-		temp_input[2] = input[i * 4 + 2];
-		temp_input[3] = input[i * 4 + 3];
-
-		x[i] = littleendian(temp_input);
-	}
-
-	for(int i = 0 ; i < 16 ; i++){
-		z[i] = x[i];
+		z[i] = input[i].word;
 	}
 
 	for (int i = 0 ; i < 10 ; i++ ){
 		double_round_in_place(z);
 	}
+
+	for(int i = 0 ; i < 16 ; i++){
+		input[i].word += z[i];
+	}
+
+}
+
+//constants for calculation,  sigma=“expand 32-byte k”, tau=“expand 16-byte k”
+static const LEUW4B sigma[4] = {101, 120, 112, 97,
+								110, 100, 32, 51,
+								50, 45, 98, 121,
+								116, 101, 32, 107
+								};
+
+static const LEUW4B tau[4] = {	101, 120, 112, 97,
+								110, 100, 32, 49,
+								54, 45, 98, 121,
+								116, 101, 32, 107
+							 };
+
+/**
+ * Salsa20 expansion function
+ * @param key must be of size 4(128 bits) or 8(256 bits).
+ * @returns pointer to `LEUW4B[16]`
+ * 
+ * “Expansion” refers to the expansion of (key, nonce) into Salsa20k(n). It also refers to
+ * the expansion of k into a long stream of Salsa20k outputs for various n’s.
+ * (see oficial specs `Salsa20 specification` by `Daniel J. Bernstein`);
+ **/
+std::array<LEUW4B,16> salsa20_expansion(LEUW4B key[], LEUW4B nonce[4], uint32_t key_bits){
 	
+	/**C++ does not advocate to return the address of a local variable to outside of the function so 
+	 * you would have to define the local variable as static variable.
+	 **/
+	//static LEUW4B output[16];
+
+	std::array<LEUW4B,16> output;
+
+	static const LEUW4B* constant;
+	if (key_bits == 256 ){
+		constant = sigma;
+	}
+	else{//key_bits == 128
+		constant = tau;
+	} 
+
+	output[0].word = constant[0].word;
+	for (size_t i = 0; i < 4; i++){
+		output[1 + i].word = key[i].word;
+	}
+	output[5].word = constant[1].word;
+	for (size_t i = 0; i < 4; i++){
+		output[6 + i].word = nonce[i].word;
+	}
+	output[10].word = constant[2].word;
+	if (key_bits == 256 ){
+		for (size_t i = 0; i < 4; i++){
+			output[11 + i].word = key[4 + i].word;
+		}
+	}
+	else{//key_bits == 128
+		for (size_t i = 0; i < 4; i++){
+			output[11 + i].word = key[i].word;
+		}
+	} 
+	output[15].word = constant[3].word;
+	
+	inplace_salsa20(output);
+
+	return output;
+
 }
