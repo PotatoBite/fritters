@@ -34,3 +34,15 @@ target_include_directories(test_io_files
     src
 )
 add_test(NAME test_io_files COMMAND test_io_files WORKING_DIRECTORY ${TESTS_FOLDER})
+
+#test
+add_executable(test_salsa
+               tests/test_salsa.cpp
+)
+set_target_properties(test_salsa PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_FOLDER} )
+
+target_include_directories(test_salsa
+    PRIVATE
+    src
+)
+add_test(NAME test_salsa COMMAND test_salsa WORKING_DIRECTORY ${TESTS_FOLDER})
