@@ -10,3 +10,9 @@ std::string xor_encrypt(const std::string &str_unprocessed,const std::string &ke
    }
    return str_processed;
 }
+
+inline void inplace_xor_encrypt(std::string& str,const std::string &key){
+   for (std::string::size_type i = 0; i < str.size(); i++) {
+      str[i] = str[i] ^ key[i % key.size()];
+   }
+}

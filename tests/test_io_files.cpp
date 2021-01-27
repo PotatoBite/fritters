@@ -29,7 +29,7 @@ int main(){
         },
         test_file_name
     )){
-        cout<< "caesar failed" << endl;
+        cout<< "\tcaesar failed" << endl;
         result = -1;
     }
 
@@ -43,7 +43,7 @@ int main(){
         },
         test_file_name
     )){
-        cout<< "vigenere failed" << endl;
+        cout<< "\tvigenere failed" << endl;
         result = -1;
     }
 
@@ -57,9 +57,43 @@ int main(){
         },
         test_file_name
     )){
-        cout<< "xor_encrypt failed" << endl;
+        cout<< "\txor_encrypt failed" << endl;
         result = -1;
     }
+
+    //xor inplace
+    if(!test_file_encrypt_decrypt(
+        [](string unencrypted_str)->string{
+            inplace_xor_encrypt(unencrypted_str, "mambo#5");
+            return unencrypted_str;
+        },
+        [](string encrypted_str)->string{
+            inplace_xor_encrypt(encrypted_str, "mambo#5");
+            return encrypted_str;
+        },
+        test_file_name
+    )){
+        cout<< "\txor_encrypt inplace failed" << endl;
+        result = -1;
+    }
+
+    //salsa20 inplace
+    if(!test_file_encrypt_decrypt(
+        [](string unencrypted_str)->string{
+            inplace_salsa20_encryption(unencrypted_str, "ugsdfblikwuhri2urho28iruqrhoicnuhoiuronqidurc pi", "testingkk2345678");
+            return unencrypted_str;
+        },
+        [](string encrypted_str)->string{
+            inplace_salsa20_encryption(encrypted_str, "ugsdfblikwuhri2urho28iruqrhoicnuhoiuronqidurc pi", "testingkk2345678");
+            return encrypted_str;
+        },
+        test_file_name
+    )){
+        cout<< "\tsalsa20 inplace failed" << endl;
+        result = -1;
+    }
+
+
     return result;
 }
 
@@ -85,8 +119,8 @@ bool compareFiles(const std::string& p1, const std::string& p2) {
 }
 
 /**
- * @param cipher must be a lambda function accepting a std::string as unique input 
- * @param decipher must be a lambda function accepting a std::string as unique input 
+ * @param cipher must be a lambda function accepting a std::string as unique input, and returning a std::string 
+ * @param decipher must be a lambda function accepting a std::string as unique input, and returning a std::string 
  * @returns `true` if the deciphered file of the ciphered inital file, remains the same, `false` otherwise 
  * */
 bool test_file_encrypt_decrypt(function<string(string)> cipher, function<string(string)> decipher, string path_to_file){

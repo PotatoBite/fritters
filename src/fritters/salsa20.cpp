@@ -1,8 +1,11 @@
-//All implementation treats words as uint8_t
+//All implementation treats words as uint32_t or uint8_t[4]
 #include <iostream>
-#include<array>
+#include <array>
+#include <iostream>
 #include <stdint.h>
 #include <math.h>
+#include <bits/stdc++.h>
+#include "xor.h"
 
 //constant-distance rotation
 #define ROTL(a,b) (((a) << (b)) | ((a) >> (32 - (b))))
@@ -14,11 +17,24 @@ union little_endiands_union_word_and_4bytes
     uint32_t word;
 };
 
+union little_endiands_union_2word_and_8bytes
+{
+    uint8_t bytes_array [8];
+    uint64_t word;
+};
+
 /**
  * Union `little_endiands_union_word_and_4bytes`, representing
  * an array of 4 bytes(uint8_t), or a word(uint32_t)
  **/
 typedef little_endiands_union_word_and_4bytes LEUW4B;
+
+/**
+ * Union `little_endiands_union_2word_and_8bytes`, representing
+ * an array of 8 bytes(uint8_t), or two words(uint64_t)
+ **/
+typedef little_endiands_union_2word_and_8bytes LEU2W8B;
+
 
 //quarter-round core of salsa20
 /**
@@ -113,6 +129,12 @@ void inplace_salsa20(LEUW4B input[16]){
 	}
 
 }
+
+/**
+ * Salsa20 hash function.
+ * 
+ * this does all operations in place, in @param input. 
+**/
 void inplace_salsa20(std::array<LEUW4B,16>& input){
 	uint32_t z[16];
 	
@@ -145,14 +167,15 @@ static const LEUW4B tau[4] = {	101, 120, 112, 97,
 
 /**
  * Salsa20 expansion function
- * @param key must be of size 4(128 bits) or 8(256 bits).
- * @returns pointer to `LEUW4B[16]`
+ * @param key must be of size 4 LEUW4B(128 bits) or 8 LEUW4B(256 bits).
+ * @returns array of `16 LEUW4B`
+ * @param key_bits tells the size of key, if `256`, uses whole key, else uses only half, also this changes some constants
  * 
  * “Expansion” refers to the expansion of (key, nonce) into Salsa20k(n). It also refers to
  * the expansion of k into a long stream of Salsa20k outputs for various n’s.
  * (see oficial specs `Salsa20 specification` by `Daniel J. Bernstein`);
  **/
-std::array<LEUW4B,16> salsa20_expansion(LEUW4B key[], LEUW4B nonce[4], uint32_t key_bits){
+std::array<LEUW4B,16> salsa20_expansion(LEUW4B key[8], LEUW4B nonce[4], uint32_t key_bits){
 	
 	/**C++ does not advocate to return the address of a local variable to outside of the function so 
 	 * you would have to define the local variable as static variable.
@@ -193,5 +216,74 @@ std::array<LEUW4B,16> salsa20_expansion(LEUW4B key[], LEUW4B nonce[4], uint32_t 
 	inplace_salsa20(output);
 
 	return output;
+
+}
+
+/**
+ * salsa20 encrytion function, over the @param message
+ * @param nonce is 8-byte secuence(2 words, 2 LEUW4B, 8 uint8_t, 2 uint32_t), for combining with block index before 
+ * calculation with `salsa20_expansion`.
+ * @param key need to be 32(recommended) or 16 bytes secuence.
+ * */
+void inplace_salsa20_encryption(std::string &message,const std::string &key, const std::string &nonce){
+	
+	if(nonce.size() > 8 || key.size() > 32){
+		//not good params
+	}
+	
+	
+	LEUW4B key_to_expand[8];
+	//copy key to LEUW4B key_to_expand, char by char, repeating string if not enough 
+	for (size_t i = 0; i < 32; i++){	
+		key_to_expand[ int( floor(i / 4.0) ) ].bytes_array[i % 4] = key[i % key.length()];
+	}
+	
+	for (size_t i = 0; i < 32; i++){
+		std::cout <<key_to_expand[int( floor(i / 4.0))].bytes_array[i % 4];
+	}
+	std::cout << std::endl;
+
+
+	LEUW4B half_nonce[2];
+	//copy nonce to LEUW4B half_nonce, char by char, repeating string if not enough 
+	for (size_t i = 0; i < 8; i++){
+		half_nonce[ int( floor(i / 4.0 ) ) ].bytes_array[i % 4] = nonce[i % nonce.length()];
+	}
+	for (size_t i = 0; i < 8; i++){
+		std::cout << half_nonce[ int( floor(i / 4.0 ) ) ].bytes_array[i % 4];
+	}
+	std::cout << std::endl;
+
+	std::array<LEUW4B,16> block;
+	static const uint64_t blocks_count = ceil(message.size() / 64.0);
+
+	//nonce to be passed to salsa20_expansion
+	LEUW4B temp_full_nonce[4];
+	temp_full_nonce[0] = half_nonce[0];
+	temp_full_nonce[1] = half_nonce[1];
+
+	for (LEU2W8B i = {.word = 0}; i.word < blocks_count; i.word++){
+		
+		//complete nonce with the other half(block of data index)
+		//temp_full_nonce = half_nonce + 
+		for (size_t ii = 0; ii < 2; ii++)
+		{
+			for (size_t iii = 0; iii < 4; iii++)
+			{
+				temp_full_nonce[2 + ii].bytes_array[iii] = i.bytes_array[ii * 4 + iii];
+			}
+			
+		}
+		//passed 256 cause the key_to_expand is constructed repeating the key multiple times til key_to_expand is apropiate sized
+		auto block_cipher = salsa20_expansion(key_to_expand, temp_full_nonce, 256);
+		for (size_t ii = 0; ii < 64; ii++){
+			if ((i.word + ii) < message.size()){
+				message[i.word + ii] ^= block_cipher[ floor( ii / double(4) )].bytes_array[ ii % 4];
+			}
+			else break;
+		}
+		
+	}
+	
 
 }

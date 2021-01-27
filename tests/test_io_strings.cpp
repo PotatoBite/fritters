@@ -5,7 +5,7 @@
 
 using namespace std;
 
-bool test_string_encrypt_decrypt( function<string(string)> , function<string(string)> , string);
+bool test_string_encrypt_decrypt( function<string(string)> , function<string(string)> ,const string);
 
 int main(){
     
@@ -22,7 +22,7 @@ int main(){
         },
         test
     )){
-        cout<< "caesar failed" << endl;
+        cout<< "\tcaesar failed" << endl;
         result = -1;
     }
 
@@ -36,7 +36,7 @@ int main(){
         },
         test
     )){
-        cout<< "vigenere failed" << endl;
+        cout<< "\tvigenere failed" << endl;
         result = -1;
     }
 
@@ -50,7 +50,39 @@ int main(){
         },
         test
     )){
-        cout<< "xor failed" << endl;
+        cout<< "\txor failed" << endl;
+        result = -1;
+    }
+
+    //xor inplace
+    if(!test_string_encrypt_decrypt(
+        [](string unencrypted_str)->string{
+            inplace_xor_encrypt(unencrypted_str, "mambo#5");
+            return unencrypted_str;
+        },
+        [](string encrypted_str)->string{
+            inplace_xor_encrypt(encrypted_str, "mambo#5" );
+            return encrypted_str;
+        },
+        test
+    )){
+        cout<< "\txor inplace failed" << endl;
+        result = -1;
+    }
+
+    //salsa20 inplace
+    if(!test_string_encrypt_decrypt(
+        [](string unencrypted_str)->string{
+            inplace_salsa20_encryption(unencrypted_str, "ugsdfblikwuhri2urho28iruqrhoicnuhoiuronqidurc pi", "asdasdasdasdasdasdasdasdasd");
+            return unencrypted_str;
+        },
+        [](string encrypted_str)->string{
+            inplace_salsa20_encryption(encrypted_str, "ugsdfblikwuhri2urho28iruqrhoicnuhoiuronqidurc pi2", "asdasdasdasdasdasdasdasdasd2" );
+            return encrypted_str;
+        },
+        test
+    )){
+        cout<< "\tsalsa20 inplace failed" << endl;
         result = -1;
     }
 
@@ -59,11 +91,11 @@ int main(){
 
 
 /**
- * @param cipher must be a lambda function accepting a std::string as unique input 
- * @param decipher must be a lambda function accepting a std::string as unique input 
+ * @param cipher must be a lambda function accepting a std::string as unique input, and returning a std::string
+ * @param decipher must be a lambda function accepting a std::string as unique input, and returning a std::string 
  * @returns `true` if the deciphered string of the ciphered inital string, remains the same, `false` otherwise 
  * */
-bool test_string_encrypt_decrypt( function<string(string)> cipher, function<string(string)> decipher, string test_str){
+bool test_string_encrypt_decrypt( function<string(string)> cipher, function<string(string)> decipher,const string test_str){
     string str_encrypted = cipher(test_str);
     string str_decrypted = decipher(str_encrypted);
 
