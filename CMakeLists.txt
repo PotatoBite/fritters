@@ -20,6 +20,16 @@ add_library(fritters SHARED
     ${FRITTERS_SOURCES}
 )
 
+include(GNUInstallDirs)
+
+set_target_properties(fritters_static fritters
+                      PROPERTIES 
+                      ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+                      LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+                      PDB_OUTPUT_DIRECTORY     "${CMAKE_BINARY_DIR}/bin"
+                      RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+)
+
 ### Add some usable files to project build folder
 set (RequiredExtras
     ""
