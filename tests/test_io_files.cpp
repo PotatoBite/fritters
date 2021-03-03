@@ -93,6 +93,24 @@ int main(){
         result = -1;
     }
 
+    //RC4 inplace
+    if(!test_file_encrypt_decrypt(
+        [](string unencrypted_str)->string{
+            RC4 cipher("ugsdfblikwuhri2urho28iruqrhoicnuhoiuronqidurc pi");
+            cipher.inplaceCipher(unencrypted_str);
+            return unencrypted_str;
+        },
+        [](string encrypted_str)->string{
+            RC4 decipher("ugsdfblikwuhri2urho28iruqrhoicnuhoiuronqidurc pi");
+            decipher.inplaceCipher(encrypted_str);
+            return encrypted_str;
+        },
+        test_file_name
+    )){
+        cout<< "\tRC4 inplace failed" << endl;
+        result = -1;
+    }
+
 
     return result;
 }

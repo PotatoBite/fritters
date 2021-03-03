@@ -1,3 +1,4 @@
+//to check
 #include <stdint.h>
 #define ROTL(a,b) (((a) << (b)) | ((a) >> (32 - (b))))
 #define QR(a, b, c, d)(		\

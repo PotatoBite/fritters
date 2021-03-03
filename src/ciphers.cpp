@@ -6,6 +6,7 @@
 #include "fritters/vigenere.cpp"
 #include "fritters/xor.cpp"
 #include "fritters/salsa20.cpp"
+#include "fritters/RC4.cpp"
 
 //utils
 //read a file(ifstream) to string
