@@ -40,14 +40,14 @@ set (RequiredExtras
 #preparing install step
 set_target_properties(fritters PROPERTIES RESOURCE "${RequiredExtras}")
 
-install(TARGETS fritters_static #_civ # source directory
-        DESTINATION "lib" # target directory
+install(TARGETS fritters_static fritters
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    OBJECTS DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
-install(TARGETS fritters #_civ # source directory
-        DESTINATION "lib" # target directory
-)
-
+#installing headers
 install(DIRECTORY "./src/" # source directory
         DESTINATION "include" # target directory
         FILES_MATCHING # install only matched files
