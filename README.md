@@ -36,9 +36,7 @@ target_link_libraries(${yourTarget} fritters_static)
 This is a list of the strongest, most production ready implementations, other existing may be in development, or subject to breaking changes:
 
 - RC4 (classic implementation) `#include <fritters/RC4.h>`:
-
-
-  ```c++
+```c++
 RC4 cipher("this is the key to use jpiyo874fiuh2in lpY%$^");
 std::string message = "string to encrypt or decrypt"
 cipher.inplaceCipher(message);
@@ -47,5 +45,4 @@ std::cout << message << std::endl;//message encrypted
 RC4 decipher("this is the key to use jpiyo874fiuh2in lpY%$^");
 decipher.inplaceCipher(message);
 std::cout << message << std::endl;//"string to encrypt or decrypt"
-
-  ```
+```
