@@ -5,7 +5,7 @@ Basic encryption utilities, for educational purposes mainly, but suitable for sm
 
 This builds a static and a shared library, so link against `fritters` or `fritters_static`, and uses cmake in the process.
 
-- Recommended way (using [collector][https://github.com/PotatoBite/collector]):
+- Recommended way (using [collector](https://github.com/PotatoBite/collector) ):
 ```cmake
 include("collector/collector.cmake")#need to be after project() call
 
