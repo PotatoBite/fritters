@@ -5,7 +5,7 @@
 
 using namespace std;
 
-bool test_string_encrypt_decrypt( function<string(string)> , function<string(string)> ,const string);
+bool test_string_encrypt_decrypt( function<string(string)> , function<string(string)> ,const string &);
 
 int main(){
     
@@ -113,7 +113,7 @@ int main(){
  * @param decipher must be a lambda function accepting a std::string as unique input, and returning a std::string 
  * @returns `true` if the deciphered string of the ciphered inital string, remains the same, `false` otherwise 
  * */
-bool test_string_encrypt_decrypt( function<string(string)> cipher, function<string(string)> decipher,const string test_str){
+bool test_string_encrypt_decrypt( function<string(string)> cipher, function<string(string)> decipher,const string &test_str){
     string str_encrypted = cipher(test_str);
     string str_decrypted = decipher(str_encrypted);
 

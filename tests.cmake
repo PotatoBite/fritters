@@ -46,3 +46,15 @@ target_include_directories(test_salsa
     src
 )
 add_test(NAME test_salsa COMMAND test_salsa WORKING_DIRECTORY ${TESTS_FOLDER})
+
+#test
+add_executable(test_RC4
+               tests/test_RC4.cpp
+)
+set_target_properties(test_RC4 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_FOLDER} )
+
+target_include_directories(test_RC4
+    PRIVATE
+    src
+)
+add_test(NAME test_RC4 COMMAND test_RC4 WORKING_DIRECTORY ${TESTS_FOLDER})

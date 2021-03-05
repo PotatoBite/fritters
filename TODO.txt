@@ -1,4 +1,3 @@
 -poner los utils en un header q se instale too
 -hacer todos los algoritmos en clases para poder mantener la llave creada, en modo se inicializa una instancia, y luego esa instancia cifra las cosas, para poder usar la lib para implementar cosas eficientes, q no tengan q recalcular la clave
--salsa20 revisar los sizes de key and nonce, poner alguna advertencia o algo, cuando estan mas grandes de lo normal, y/o permitir hashearlos con salsa mismo para obtener un key/nonce del tamanno requerido(aunq no se si esto ultimo introduzca vulnerabilidades)
--annadir como test algunos pares de vectores(plaintext-ciphertext)
+-salsa20, RC4 revisar los sizes de key and nonce, poner alguna advertencia o algo, cuando estan mas grandes de lo normal, y/o quiza permitir hashearlos con salsa mismo para obtener un key/nonce del tamanno requerido(aunq no se si esto ultimo introduzca vulnerabilidades)
