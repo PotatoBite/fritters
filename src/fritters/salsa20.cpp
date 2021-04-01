@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdint.h>
 #include <math.h>
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 #include "xor.h"
 
 //constant-distance rotation

@@ -8,7 +8,8 @@ class RC4
 {
     private:
         uint8_t S[256];//state array
-        size_t Ki = 0, Kj = 0;//indexes to get keystream from, Ki mark the number of bytes previously ciphered 
+        //size_t Ki = 0, Kj = 0;//i think that is not needed to be size_t, but not really sure, cause in some point was set to this can not remember why 
+        uint8_t Ki = 0, Kj = 0;//indexes to get keystream from, Ki mark the number of bytes previously ciphered 
         
         /**
          * @brief Key-scheduling algorithm. Initialize the permutation in the state array (S)
