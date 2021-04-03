@@ -38,7 +38,7 @@ This is a list of the strongest, most production ready implementations, other ex
 - RC4 (classic implementation) `#include <fritters/RC4.h>`:
 ```c++
 RC4 cipher("this is the key to use jpiyo874fiuh2in lpY%$^");
-std::string message = "string to encrypt or decrypt"
+std::string message = "string to encrypt or decrypt";
 cipher.inplaceCipher(message);
 std::cout << message << std::endl;//message encrypted
 

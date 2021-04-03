@@ -95,7 +95,7 @@ std::string asciistring2hexstring(const std::string &ascii)
    std::string hex = "";
    for (size_t i = 0; i < ascii.length(); i++){
       //taking two characters from hex string
-      std::string part = hex.substr(i, 2);
+      std::string part = ascii.substr(i, 2);
       //changing it into base 16
       char ch = stoul(part, nullptr, 16);
       //putting it into the hex string
