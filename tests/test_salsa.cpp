@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fritters/salsa20.cpp>
+#include <fritters/utils.cpp>
 
 bool test_row_round();
 bool test_quarter_round();

@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iomanip>
 #include <vector>
+#include <fritters/utils.cpp>
 
 struct test_RC4_vector
 {
@@ -12,15 +13,6 @@ struct test_RC4_vector
 };
 
 bool test_RC4();
-std::string string2hexstring(const std::string &str);
-
-/**
- * @brief Converts from hex string to ASCII string
- * 
- * @param hex a string represented by hex numbers(in pairs ie: BB)
- * @return std::string a string coded in ASCII
- */
-std::string hexstring2asciistring(const std::string &hex);
 
 int main()
 {
@@ -62,44 +54,4 @@ bool test_RC4(){
     if (result == 0) return true; 
     
     return false;
-}
-
-std::string string2hexstring(const std::string &str)//introduces weird chars
-{
-    std::stringstream ss;
-    ss << std::hex << std::setfill('0');
-    for (int i = 0; i < str.size(); ++i)
-    {
-        ss << std::setw(2) << static_cast<unsigned>(str[i]);
-    }
-    return ss.str();
-}
-
-std::string hexstring2asciistring(const std::string &hex)//WARNING: this function if not introduced a correct string could break execution
-{
-   std::string ascii = "";
-   for (size_t i = 0; i < hex.length(); i += 2){
-      //taking two characters from hex string
-      std::string part = hex.substr(i, 2);
-      //changing it into base 16
-      char ch = stoul(part, nullptr, 16);
-      //putting it into the ASCII string
-      ascii += ch;
-   }
-   return ascii;
-}
-
-
-std::string asciistring2hexstring(const std::string &ascii)//WARNING: this function if not introduced a correct string could break execution
-{
-   std::string hex = "";
-   for (size_t i = 0; i < ascii.length(); i++){
-      //taking two characters from hex string
-      std::string part = ascii.substr(i, 2);
-      //changing it into base 16
-      char ch = stoul(part, nullptr, 16);
-      //putting it into the hex string
-      hex += ch;
-   }
-   return hex;
 }
