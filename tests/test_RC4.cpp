@@ -75,7 +75,7 @@ std::string string2hexstring(const std::string &str)//introduces weird chars
     return ss.str();
 }
 
-std::string hexstring2asciistring(const std::string &hex)
+std::string hexstring2asciistring(const std::string &hex)//WARNING: this function if not introduced a correct string could break execution
 {
    std::string ascii = "";
    for (size_t i = 0; i < hex.length(); i += 2){
@@ -90,7 +90,7 @@ std::string hexstring2asciistring(const std::string &hex)
 }
 
 
-std::string asciistring2hexstring(const std::string &ascii)
+std::string asciistring2hexstring(const std::string &ascii)//WARNING: this function if not introduced a correct string could break execution
 {
    std::string hex = "";
    for (size_t i = 0; i < ascii.length(); i++){

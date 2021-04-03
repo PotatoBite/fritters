@@ -38,7 +38,7 @@ void RC4::KSA(std::string key){
 
 uint8_t RC4::getKeystreamValue()
 {
-    std::cout<< std::dec << Ki <<"-";
+    //std::cout<< std::dec << Ki <<"-";
     Ki = (Ki + 1) % 256;
     Kj = (Kj + S[Ki] ) % 256;
 
@@ -59,6 +59,4 @@ void RC4::inplaceCipher(std::string &data)
         std::cout<< std::hex << (int)a << " ";
         data[i] ^= a;
     }
-    std::cout<< std::endl;
-
 }
