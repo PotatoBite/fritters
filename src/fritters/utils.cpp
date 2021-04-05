@@ -32,7 +32,8 @@ std::string string2hexstring(const std::string &str)
     ss << std::hex << std::setfill('0');
     for (int i = 0; i < str.size(); ++i)
     {
-        ss << std::setw(2) << static_cast<unsigned>(str[i]);
+        //ss << std::setw(2) << static_cast<unsigned>(str[i]);
+        ss << std::setw(2) << ((unsigned int)(unsigned char)str[i]);//something weird happens with signs if not used two casts, also i think that std::setw(2) is doing nothing 
     }
     return ss.str();
 }
