@@ -56,7 +56,15 @@ void RC4::inplaceCipher(std::string &data)
     for (size_t i = 0; i <  data.size(); i++)
     {
         uint8_t a = getKeystreamValue();
-        std::cout<< std::hex << (int)a << " ";
+        //std::cout<< std::hex << (int)a << " ";
         data[i] ^= a;
+    }
+}
+
+void RC4::getStateArray(uint8_t S[256])
+{
+    for (short i = 0; i < 256; i++)
+    {
+        S[i] = (*this).S[i];
     }
 }

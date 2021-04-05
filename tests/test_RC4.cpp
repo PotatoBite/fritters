@@ -38,6 +38,17 @@ bool test_RC4(){
     for (int i=0; i<input_words_array.size(); i++)
     {
         RC4 cipher(input_words_array[i].key);
+
+        /* //print the first state of internal state array of cipher
+        uint8_t S[256];
+        cipher.getStateArray(S);
+        for (short i = 0; i < 256; i++)
+        {
+            std::cout << S[i] << " ";
+        }
+        std::cout << std::endl;
+        */
+
         cipher.inplaceCipher(input_words_array[i].plaintext);   
     }
 

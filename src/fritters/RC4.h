@@ -42,4 +42,11 @@ class RC4
          * @param data Plain or ciphered text 
          */
         void inplaceCipher(std::string &data);
+
+        /**
+         * @brief Copies the currently State Array to the array passed as parameter
+         * 
+         * @param S array to store values of internal state array of cipher
+         */
+        void getStateArray(uint8_t S[256]);
 };
