@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
+#include <iomanip>
 
 std::string slurp(std::ifstream& in); 
 
