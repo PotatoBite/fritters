@@ -19,8 +19,8 @@ union little_endiands_union_word_and_4bytes
 
 union little_endiands_union_2word_and_8bytes
 {
+	uint64_t word;
     uint8_t bytes_array [8];
-    uint64_t word;
 };
 
 /**
@@ -262,7 +262,7 @@ void inplace_salsa20_encryption(std::string &message,const std::string &key, con
 	temp_full_nonce[0] = half_nonce[0];
 	temp_full_nonce[1] = half_nonce[1];
 
-	for (LEU2W8B i = {.word = 0}; i.word < blocks_count; i.word++){
+	for (LEU2W8B i = { 0 }; i.word < blocks_count; i.word++) {
 		
 		//complete nonce with the other half(block of data index)
 		//temp_full_nonce = half_nonce + 

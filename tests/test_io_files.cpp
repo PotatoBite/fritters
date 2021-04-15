@@ -3,6 +3,7 @@
 #include <iterator>
 #include <string>
 #include <algorithm>
+#include <functional>
 
 #include <ciphers.cpp>
 
