@@ -15,8 +15,8 @@ void RC4::KSA(std::string key){
     //restart index of keystream variables, in case of regenerating state array to avoid wrong use of cipher
     Ki = 0, Kj = 0;
 
-    short keylength =  key.length();
-    //size_t keylength =  key.size();
+    //short keylength =  key.length();
+    short keylength =  key.size();
 
     //initialize state array to identity permutation
     for (short i = 0; i < 256; i++)
