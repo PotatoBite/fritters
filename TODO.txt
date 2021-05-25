@@ -3,3 +3,5 @@
 -no compila en msvc por un detalle en salsa20 q uso cpp20
 -line 30 RC4, need to check if keylength is not 0, otherwise KAPUT
 -hexstring2asciistring explodes when passed non hex string
+-in RC4, RC4::KSA, start using unsigned char* instead of string, for performance and more compatibility with c ABI
+-make some comparations with other implementations of algorithms
