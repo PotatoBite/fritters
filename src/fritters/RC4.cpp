@@ -27,7 +27,8 @@ void RC4::KSA(std::string key){
     short j = 0;
     for (short i = 0; i < 256; i++)
     {
-        j = (j + S[i] + key[i % keylength]) % 256;
+        //j = (j + S[i] + key[i % keylength]) % 256;
+        j = (j + S[i] + static_cast<uint8_t>(key[i % keylength])) % 256;
 
         //swap S[i and S[j]]
         uint8_t tempValue = S[i];
