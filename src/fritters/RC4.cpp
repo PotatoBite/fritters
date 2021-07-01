@@ -11,7 +11,7 @@ RC4::~RC4()
 }
 
 
-void RC4::KSA(std::string key){
+void RC4::KSA(const std::string key){
     //restart index of keystream variables, in case of regenerating state array to avoid wrong use of cipher
     Ki = 0, Kj = 0;
 
@@ -67,5 +67,34 @@ void RC4::getStateArray(uint8_t S[256])
     for (short i = 0; i < 256; i++)
     {
         S[i] = (*this).S[i];
+    }
+}
+
+
+void RC4::KSA(const std::string key, uint8_t jArray[256]){
+    //restart index of keystream variables, in case of regenerating state array to avoid wrong use of cipher
+    Ki = 0, Kj = 0;
+
+    //short keylength =  key.length();
+    short keylength =  key.size();
+
+    //initialize state array to identity permutation
+    for (short i = 0; i < 256; i++)
+    {
+        S[i] = i;
+    }
+
+    short j = 0;
+    for (short i = 0; i < 256; i++)
+    {
+        //j = (j + S[i] + key[i % keylength]) % 256;
+        j = (j + S[i] + static_cast<uint8_t>(key[i % keylength])) % 256;
+        
+        jArray[i] = j;
+
+        //swap S[i and S[j]]
+        uint8_t tempValue = S[i];
+        S[i] = S[j];
+        S[j] = tempValue;
     }
 }

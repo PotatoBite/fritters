@@ -37,9 +37,18 @@ class RC4
          * 
          * @param key 
          */
-        void KSA(std::string key);
+        void KSA(const std::string key);
 
-        
+        /**
+         * @brief Key-scheduling algorithm. Initialize the permutation in the state array (S)
+         * and fills `jArray` with the resulting `j` index in each iteration of KSA
+         * 
+         * @param key 
+         * @param jArray 256 length array of uint_8, to fill.
+         */
+        void KSA(const std::string key, uint8_t jArray[256]);
+
+
         /**
          * @brief Cipher/decipher
          * 
