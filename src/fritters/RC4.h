@@ -56,10 +56,20 @@ class RC4
          */
         void inplaceCipher(std::string &data);
 
+
+        //JUST FOR DEBUG/ANALYSIS
         /**
          * @brief Copies the currently State Array to the array passed as parameter
          * 
          * @param S array to store values of internal state array of cipher
          */
         void getStateArray(uint8_t S[256]);
+
+        /**
+         * @brief Get the Keystream Value, D E B U G object, use only if you really know what you are doing,
+         *  is just a wrapper for private getKeystreamValue
+         * 
+         * @return uint8_t 
+         */
+        uint8_t getKeystreamValueDEBUG();
 };
