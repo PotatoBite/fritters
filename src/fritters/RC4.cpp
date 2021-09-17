@@ -103,3 +103,13 @@ uint8_t RC4::getKeystreamValueDEBUG()
 {
     return RC4::getKeystreamValue();
 }
+
+uint8_t RC4::getJindex()
+{
+    return Kj;
+}
+
+uint8_t RC4::getIindex()
+{
+    return Ki;
+}

@@ -72,4 +72,9 @@ class RC4
          * @return uint8_t 
          */
         uint8_t getKeystreamValueDEBUG();
+
+        ///DEBUG only to get the value of `j` index in algorithm
+        uint8_t getJindex();
+        ///DEBUG only to get the value of `i` index in algorithm
+        uint8_t getIindex();
 };
