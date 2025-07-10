@@ -12,6 +12,7 @@ bool test_public_function();
 bool test_secret_function();
 bool test_encrypt_decrypt(const cpp_int & message, const cpp_int &n, const cpp_int &e, const cpp_int &d);
 bool test_send_receive_message(std::string message);
+bool test_digital_signature();
 
 int main() {
     int result = 0;
@@ -40,6 +41,10 @@ int main() {
     }
     if (!test_send_receive_message("Hi. I am a dinosaur!")) {
         std::cerr << "\tsend-receive failed" << std::endl;
+        result = -1;
+    }
+    if (!test_digital_signature()) {
+        std::cerr << "\tdigital-signature failed" << std::endl;
         result = -1;
     }
 
@@ -81,5 +86,24 @@ bool test_send_receive_message(const std::string message) {
     cpp_int cipher_text = RSA::send_message(message, e, n);
     std::string decrypted_message = RSA::receive_message(cipher_text, d, n);
     return decrypted_message == message;
+}
+
+bool test_digital_signature() {
+    const cpp_int message = 100;
+    const cpp_int n = 319;
+    const cpp_int e = 3;
+    const cpp_int d = 187;
+
+
+    cpp_int digital_signature = RSA::sign_message(message, d, n).second;
+    if (
+        !RSA::verify_message(message, digital_signature, e, n) or
+        RSA::verify_message(message, digital_signature + 1, e, n) or
+        RSA::verify_message(message + 1, digital_signature, e, n) or
+        RSA::verify_message(message, digital_signature, e + 1, n) or
+        RSA::verify_message(message, digital_signature, e, n + 1)) {
+        return false;
+    }
+    return true;
 }
 

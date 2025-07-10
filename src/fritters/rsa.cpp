@@ -102,4 +102,12 @@ std::string RSA::receive_message(const cpp_int &cipher_text, const cpp_int &d_re
     return decoded_message;
 }
 
+std::pair<cpp_int, cpp_int> RSA::sign_message(const cpp_int& message, const cpp_int& d_sender, const cpp_int& n_sender) {
+    cpp_int digital_signature = secret_function(message, d_sender, n_sender);
+    return {message, digital_signature};
+}
 
+bool RSA::verify_message(const cpp_int& message, const cpp_int& digital_signature, const cpp_int& e_sender, const cpp_int& n_sender) {
+    const cpp_int recovered_message = public_function(digital_signature, e_sender, n_sender);
+    return recovered_message == message;
+}
