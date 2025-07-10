@@ -89,9 +89,7 @@ cpp_int RSA::send_message(const std::string &message, const cpp_int &e_recipient
     for (unsigned char c: message) {
         encoded_message <<= 8;
         encoded_message |= c;
-        encoded_message %= n_recipient;
     }
-
     return public_function(encoded_message, e_recipient, n_recipient);
 }
 
