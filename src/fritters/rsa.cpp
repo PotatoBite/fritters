@@ -44,14 +44,12 @@ std::pair<cpp_int, cpp_int> RSA::generate_keys(int nbits) {
         q = generate_prime(nbits);
     }
 
-
     return {p, q};
 }
 
 std::array<cpp_int, 3> RSA::setup(int nbits) {
     cpp_int p, q, e, phi_n;
     e = 65537;
-    std::cerr << "Finding the two primes. Please wait...\n";
     do {
         auto t = generate_keys(nbits);
         p = t.first;
@@ -67,9 +65,6 @@ std::array<cpp_int, 3> RSA::setup(int nbits) {
     assert(d * e % phi_n == 1);
 
     cpp_int n = p * q;
-    std::cerr << "Primes found successfully.\nHere are your keys:\n";
-    std::cerr << "public: (" << e << ", " << p * q << ")\n";
-    std::cerr << "secret: (" << d << ", " << p * q << ")\n";
 
     return {n, e, d};
 }

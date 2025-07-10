@@ -58,3 +58,10 @@ target_include_directories(test_RC4
     src
 )
 add_test(NAME test_RC4 COMMAND test_RC4 WORKING_DIRECTORY ${TESTS_FOLDER})
+
+add_executable(test_rsa
+        tests/test_rsa.cpp
+)
+set_target_properties(test_rsa PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_FOLDER} )
+
+target_include_directories(test_rsa  PRIVATE src  3rdParty)
