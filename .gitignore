@@ -84,3 +84,5 @@ collected_deps/
 collections/
 .vs/
 out/
+
+.idea/
